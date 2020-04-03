@@ -173,9 +173,9 @@ uint8_t   ui8_startup_boost_timer = 0;
 uint8_t   ui8_startup_boost_fade_steps = 0;
 uint16_t  ui16_startup_boost_fade_variable_x256;
 uint16_t  ui16_startup_boost_fade_variable_step_amount_x256;
-static void boost_run_statemachine(void);
-static uint8_t apply_boost(uint8_t ui8_pas_cadence, uint16_t ui16_max_current_boost_state, uint16_t *ui16_target_current);
-static void apply_boost_fade_out(uint16_t *ui16_adc_target_current);
+//static void boost_run_statemachine(void);
+//static uint8_t apply_boost(uint8_t ui8_pas_cadence, uint16_t ui16_max_current_boost_state, uint16_t *ui16_target_current);
+//static void apply_boost_fade_out(uint16_t *ui16_adc_target_current);
 
 #define TORQUE_SENSOR_LINEARIZE_NR_POINTS 8
 uint16_t ui16_torque_sensor_linearize_right[TORQUE_SENSOR_LINEARIZE_NR_POINTS][2];
@@ -201,15 +201,11 @@ void ebike_app_controller(void)
 
 static void ebike_control_motor(void)
 {
-  uint32_t ui32_temp = 0;
   uint32_t ui32_pedal_power_no_cadence_x10 = 0;
   uint32_t ui32_assist_level_factor_x1000;
   uint32_t ui32_current_amps_x10 = 0;
-  uint8_t ui8_tmp_pas_cadence_rpm;
+//  uint8_t ui8_tmp_pas_cadence_rpm;
   uint16_t ui16_adc_current;
-  uint16_t ui16_adc_max_battery_power_current = 0;
-  uint8_t ui8_boost_enabled_and_applied = 0;
-  uint16_t ui16_adc_max_current_boost_state = 0;
   uint16_t ui16_battery_voltage_filtered = calc_filtered_battery_voltage();
 
   // the ui8_m_brake_is_set is updated here only and used all over ebike_control_motor()
@@ -225,9 +221,12 @@ static void ebike_control_motor(void)
     {
       ui32_assist_level_factor_x1000 = (uint32_t) m_config_vars.ui16_assist_level_factor_x1000;
       // force a min of 10 RPM cadence
+
       ui32_pedal_power_no_cadence_x10 = (((uint32_t) ui16_m_pedal_torque_x100 * 10) / 50U);
 
-      ui32_current_amps_x10 = (ui32_pedal_power_no_cadence_x10 * ui32_assist_level_factor_x1000) / 1000;
+      if (ui8_pas_cadence_rpm > 0u || m_config_vars.ui8_motor_assistance_startup_without_pedal_rotation) {
+          ui32_current_amps_x10 = (ui32_pedal_power_no_cadence_x10 * ui32_assist_level_factor_x1000) / 1000;
+      }
 
       // 6.410 = 1 / 0.156 (each ADC step for current)
       // 6.410 * 8 = ~51
@@ -287,20 +286,20 @@ static void ebike_control_motor(void)
     // nothing
   }
 
-  ui8_tmp_pas_cadence_rpm = ui8_pas_cadence_rpm;
+//  ui8_tmp_pas_cadence_rpm = ui8_pas_cadence_rpm;
   // let's cheat next value, only to cheat apply_boost()
-  if (m_config_vars.ui8_motor_assistance_startup_without_pedal_rotation)
-  {
-    if (ui8_tmp_pas_cadence_rpm < 10) { ui8_tmp_pas_cadence_rpm = 10; }
-  }
+//  if (m_config_vars.ui8_motor_assistance_startup_without_pedal_rotation)
+//  {
+//    if (ui8_tmp_pas_cadence_rpm < 10) { ui8_tmp_pas_cadence_rpm = 10; }
+//  }
 
   // apply boost and boost fade out
-  if(m_config_vars.ui8_startup_motor_power_boost_feature_enabled)
-  {
-    boost_run_statemachine();
-    ui8_boost_enabled_and_applied = apply_boost(ui8_tmp_pas_cadence_rpm, ui16_adc_max_current_boost_state, &ui16_m_adc_target_current);
-    apply_boost_fade_out(&ui16_m_adc_target_current);
-  }
+//  if(m_config_vars.ui8_startup_motor_power_boost_feature_enabled)
+//  {
+//    boost_run_statemachine();
+//    ui8_boost_enabled_and_applied = apply_boost(ui8_tmp_pas_cadence_rpm, ui16_adc_max_current_boost_state, &ui16_m_adc_target_current);
+//    apply_boost_fade_out(&ui16_m_adc_target_current);
+//  }
 
   // throttle
   apply_throttle(ui8_throttle, &ui16_m_adc_target_current);
@@ -677,7 +676,7 @@ static void communications_process_packages(uint8_t ui8_frame_type)
 
       // calculate current step for ramp up
 //      ui32_temp = ((uint32_t) 24375) / ((uint32_t) m_config_vars.ui8_ramp_up_amps_per_second_x10); // see note below
-      ui32_temp = ((uint32_t) 10000) / ((uint32_t) m_config_vars.ui8_ramp_up_amps_per_second_x10); // see note below
+      ui32_temp = ((uint32_t) 6000) / ((uint32_t) m_config_vars.ui8_ramp_up_amps_per_second_x10); // see note below
       ui16_g_current_ramp_up_inverse_step = (uint16_t) ui32_temp;
 
       /*---------------------------------------------------------
@@ -1138,6 +1137,7 @@ static void apply_cruise(uint16_t *ui16_target_current)
                                           (uint32_t) 255)); // maximum target PWM
 }
 
+/*
 
 static void boost_run_statemachine(void)
 {
@@ -1255,7 +1255,6 @@ static uint8_t apply_boost(uint8_t ui8_pas_cadence, uint16_t ui16_max_current_bo
   return ui8_boost_enable;
 }
 
-
 static void apply_boost_fade_out(uint16_t *ui16_adc_target_current)
 {
   if (ui8_startup_boost_fade_enable)
@@ -1274,7 +1273,7 @@ static void apply_boost_fade_out(uint16_t *ui16_adc_target_current)
     *ui16_adc_target_current = ui16_startup_boost_fade_variable_x256 >> 8;
   }
 }
-
+*/
 
 static void read_pas_cadence(void)
 {

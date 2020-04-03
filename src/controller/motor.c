@@ -1159,34 +1159,49 @@ void calc_foc_angle(void)
   // ui32_l_x1048576 = 142 <--- THIS VALUE WAS verified experimentaly on 2018.07 to be near the best value for a 48V motor
   // Test done with a fixed mechanical load, duty_cycle = 200 and 100 and measured battery current was 16 and 6 (10 and 4 amps)
   // ---------------------------------------------------------------------------------------------------------------------
+
+
+  //36 V high-cadence
+//  ui32_l_x1048576 = 115; // confirmed working with the 36 V motor (only) by user jbalat so far
+//  ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
+
+//  //48 V high-cadence
+//  ui32_l_x1048576 = 142; // confirmed working with the 36 V motor (only) by user jbalat so far
+//  ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
+
+//  // 48V
+//  ui32_l_x1048576 = 142; // 48 V motor
+//  ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS;
+
+//  // 36V
+  ui32_l_x1048576 = 80; // 36 V motor
+  ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS;
+
+// Not working for now due to 850C bug
   
-  switch (p_configuration_variables->ui8_motor_type)
-  {
-    default:
-    case 0:
+//  switch (p_configuration_variables->ui8_motor_type)
+//  {
+//    default:
+//    case 0:
 //      ui32_l_x1048576 = 142; // 48 V motor
 //      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS;
-      ui32_l_x1048576 = 199;
-      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
-    break;
+//    break;
 
-    case 1:
+//    case 1:
 //      ui32_l_x1048576 = 80; // 36 V motor
 //      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS;
-      ui32_l_x1048576 = 115; // confirmed working with the 36 V motor (only) by user jbalat so far
-      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
-    break;
+//    break;
     
-    case 2: // experimental high cadence mode for 48 volt motor
-      ui32_l_x1048576 = 199;
-      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
-    break;
+//    case 2: // experimental high cadence mode for 48 volt motor
+//      ui32_l_x1048576 = 199;
+//      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
+//    break;
     
-    case 3: // experimental high cadence mode for 36 volt motor
-      ui32_l_x1048576 = 115; // confirmed working with the 36 V motor (only) by user jbalat so far
-      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
-    break;
-  }
+//    case 3: // experimental high cadence mode for 36 volt motor
+//      ui32_l_x1048576 = 115; // confirmed working with the 36 V motor (only) by user jbalat so far
+//      ui16_max_motor_speed_erps = (uint16_t) MOTOR_OVER_SPEED_ERPS_EXPERIMENTAL;
+//    break;
+//  }
 
   // calc IwL
   ui32_temp = ui32_i_phase_current_x2 * ui32_l_x1048576;
