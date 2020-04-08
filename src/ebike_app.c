@@ -225,16 +225,10 @@ static void ebike_control_motor(void)
     {
       ui32_assist_level_factor_x1000 = (uint32_t) m_config_vars.ui16_assist_level_factor_x1000;
       // force a min of 10 RPM cadence
-      ui32_pedal_power_no_cadence_x10 = (((uint32_t) ui16_m_pedal_torque_x100 * 10) / (uint32_t) 96);
+      ui32_pedal_power_no_cadence_x10 = (((uint32_t) ui16_m_pedal_torque_x100 * 10) / (uint32_t) 50);
 
-      if (m_config_vars.ui8_motor_assistance_startup_without_pedal_rotation == 0 ||
-          ui8_pas_cadence_rpm)
-      {
-        ui32_current_amps_x10 = ((uint32_t) ui16_m_pedal_power_x10 * ui32_assist_level_factor_x1000) / 1000;
-      }
-      else
-      {
-        ui32_current_amps_x10 = (ui32_pedal_power_no_cadence_x10 * ui32_assist_level_factor_x1000) / 1000;
+      if (ui8_pas_cadence_rpm > 0u || m_config_vars.ui8_motor_assistance_startup_without_pedal_rotation) {
+          ui32_current_amps_x10 = (ui32_pedal_power_no_cadence_x10 * ui32_assist_level_factor_x1000) / 1000;
       }
 
       // 6.410 = 1 / 0.156 (each ADC step for current)
@@ -674,7 +668,8 @@ static void communications_process_packages(uint8_t ui8_frame_type)
       }
 
       // calculate current step for ramp up
-      ui32_temp = ((uint32_t) 24375) / ((uint32_t) m_config_vars.ui8_ramp_up_amps_per_second_x10); // see note below
+//      ui32_temp = ((uint32_t) 24375) / ((uint32_t) m_config_vars.ui8_ramp_up_amps_per_second_x10); // see note below
+      ui32_temp = ((uint32_t) 4000) / ((uint32_t) m_config_vars.ui8_ramp_up_amps_per_second_x10); // POWA BABEH
       ui16_g_current_ramp_up_inverse_step = (uint16_t) ui32_temp;
 
       /*---------------------------------------------------------
@@ -724,7 +719,7 @@ static void communications_process_packages(uint8_t ui8_frame_type)
       ui8_tx_buffer[3] = ui8_m_system_state;
       ui8_tx_buffer[4] = 0;
       ui8_tx_buffer[5] = 57;
-      ui8_tx_buffer[6] = 1;
+      ui8_tx_buffer[6] = 11;
       ui8_len += 4;
       break;
 
