@@ -36,8 +36,8 @@
 // Choose PWM ramp up/down step (higher value will make the motor acceleration slower)
 //
 // For a 24V battery, 25 for ramp up seems ok. For an higher voltage battery, this values should be higher
-#define PWM_DUTY_CYCLE_RAMP_UP_INVERSE_STEP 12
-#define PWM_DUTY_CYCLE_RAMP_DOWN_INVERSE_STEP 24
+#define PWM_DUTY_CYCLE_RAMP_UP_INVERSE_STEP 40
+#define PWM_DUTY_CYCLE_RAMP_DOWN_INVERSE_STEP 12
 
 // *************************************************************************** //
 // MOTOR
@@ -46,7 +46,7 @@
 //
 // This value should be near 0.
 // You can try to tune with the whell on the air, full throttle and look at batttery current: adjust for lower battery current
-#define MOTOR_ROTOR_OFFSET_ANGLE 10
+#define MOTOR_ROTOR_OFFSET_ANGLE 8
 
 #define ADC_MOTOR_CURRENT_MAX 192 // 30 amps (0.156 amps each unit)
 
