@@ -46,7 +46,7 @@
 //
 // This value should be near 0.
 // You can try to tune with the whell on the air, full throttle and look at batttery current: adjust for lower battery current
-#define MOTOR_ROTOR_OFFSET_ANGLE 8
+#define MOTOR_ROTOR_OFFSET_ANGLE 9
 
 #define ADC_MOTOR_CURRENT_MAX 192 // 30 amps (0.156 amps each unit)
 
