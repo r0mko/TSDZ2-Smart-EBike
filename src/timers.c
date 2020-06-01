@@ -14,33 +14,33 @@
 // Pulse signal: period of 20us, Ton = 2us, Toff = 18us
 void timer2_init(void)
 {
-  uint16_t ui16_i;
+    uint16_t ui16_i;
 
-  // Timer2 clock = 16MHz; target: 20us period --> 50khz
-  // counter period = (1 / (16000000 / prescaler)) * (159 + 1) = 20us
-  TIM2_TimeBaseInit(TIM2_PRESCALER_2, 159);
+    // Timer2 clock = 16MHz; target: 20us period --> 50khz
+    // counter period = (1 / (16000000 / prescaler)) * (159 + 1) = 20us
+    TIM2_TimeBaseInit(TIM2_PRESCALER_2, 159);
 
-  // pulse of 2us
-  TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 16, TIM2_OCPOLARITY_HIGH);
-  TIM2_OC2PreloadConfig(ENABLE);
+    // pulse of 2us
+    TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 16, TIM2_OCPOLARITY_HIGH);
+    TIM2_OC2PreloadConfig(ENABLE);
 
-  TIM2_ARRPreloadConfig(ENABLE);
+    TIM2_ARRPreloadConfig(ENABLE);
 
-  TIM2_Cmd(ENABLE);
+    TIM2_Cmd(ENABLE);
 
-  // IMPORTANT: this software delay is needed so timer2 work after this
-  for (ui16_i = 0; ui16_i < (65000); ui16_i++) { ; }
+    // IMPORTANT: this software delay is needed so timer2 work after this
+    for (ui16_i = 0; ui16_i < (65000); ui16_i++) { ; }
 }
 
 void timer3_init(void)
 {
-  uint16_t ui16_i;
+    uint16_t ui16_i;
 
-  // TIM3 Peripheral Configuration
-  TIM3_DeInit();
-  TIM3_TimeBaseInit(TIM3_PRESCALER_16384, 0xffff); // each incremment at every ~1ms
-  TIM3_Cmd(ENABLE); // TIM3 counter enable
+    // TIM3 Peripheral Configuration
+    TIM3_DeInit();
+    TIM3_TimeBaseInit(TIM3_PRESCALER_16384, 0xffff); // each incremment at every ~1ms
+    TIM3_Cmd(ENABLE); // TIM3 counter enable
 
-  // IMPORTANT: this software delay is needed so timer3 work after this
-  for (ui16_i = 0; ui16_i < (65000); ui16_i++) { ; }
+    // IMPORTANT: this software delay is needed so timer3 work after this
+    for (ui16_i = 0; ui16_i < (65000); ui16_i++) { ; }
 }

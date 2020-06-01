@@ -12,8 +12,8 @@
 
 void wheel_speed_sensor_init (void)
 {
-  //whell speed sensor pin as input
-  GPIO_Init(WHEEL_SPEED_SENSOR__PORT,
-	    WHEEL_SPEED_SENSOR__PIN,
-	    GPIO_MODE_IN_PU_NO_IT); // input pull-up, no external interrupt
+    //whell speed sensor pin as input
+    GPIO_Init(WHEEL_SPEED_SENSOR__PORT,
+              WHEEL_SPEED_SENSOR__PIN,
+              GPIO_MODE_IN_PU_NO_IT); // input pull-up, no external interrupt
 }
